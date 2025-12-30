@@ -59,14 +59,14 @@
 
         /* INFO FORM */
         .info-section { margin-bottom: 15px; }
-        .form-row { display: flex; align-items: baseline; margin-bottom: 8px; } /* Tăng khoảng cách dòng viết tay */
+        .form-row { display: flex; align-items: baseline; margin-bottom: 8px; } 
         .label { white-space: nowrap; margin-right: 5px; font-size: 11pt; }
         .value { flex: 1; border-bottom: 1px dotted #000; font-weight: bold; padding-left: 5px; font-size: 11pt; min-height: 18px; }
 
         /* TABLE */
         table.handover-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 15px; }
         table.handover-table th { border: 1px solid #000; padding: 5px 2px; background: #fff; font-weight: bold; height: 40px; vertical-align: middle; text-align: center;}
-        table.handover-table td { border: 1px solid #000; padding: 4px; height: 28px; vertical-align: middle; } /* Tăng chiều cao dòng để viết */
+        table.handover-table td { border: 1px solid #000; padding: 4px; height: 28px; vertical-align: middle; }
         
         .center { text-align: center; }
         .right { text-align: right; }
@@ -107,7 +107,7 @@
                 <div class="header-left">
                     <span class="studio-name" id="ten-studio">2H STUDIO</span>
                     <span class="studio-info">ĐC: <span id="dc-studio"></span></span>
-                    <span class="studio-info">Email: <span id="email-studio"></span></span> <!-- Thêm Email -->
+                    <span class="studio-info">Email: <span id="email-studio"></span></span>
                     <span class="studio-info">Hotline: <span id="hl-studio"></span></span>
                 </div>
                 <div class="header-right">
@@ -122,19 +122,19 @@
                 <div class="date-sub" id="ngay-thang">Ngày ... tháng ... năm ...</div>
             </div>
 
-            <!-- INFO (ĐỂ TRỐNG TỰ GHI) -->
+            <!-- INFO -->
             <div class="info-section">
                 <div class="form-row">
                     <span class="label">Họ và tên người nhận hàng:</span>
-                    <span class="value"></span> <!-- Trống -->
+                    <span class="value"></span> 
                 </div>
                 <div class="form-row">
                     <span class="label">Địa chỉ (Bộ phận):</span>
-                    <span class="value"></span> <!-- Trống -->
+                    <span class="value"></span> 
                 </div>
                 <div class="form-row">
                     <span class="label">Lý do xuất hàng:</span>
-                    <span class="value"></span> <!-- Trống -->
+                    <span class="value"></span> 
                 </div>
                 <div class="form-row">
                     <span class="label" style="width: 50%;">Xuất tại kho: <span class="value" style="border:none; border-bottom:1px dotted #000" id="kho-nhap"></span></span>
@@ -142,17 +142,19 @@
                 </div>
             </div>
 
-            <!-- TABLE (BỎ CỘT MÃ, ĐVT - ĐỂ TRỐNG) -->
+            <!-- TABLE -->
             <table class="handover-table">
                 <thead>
                     <tr>
-                        <th style="width: 40px;">STT</th>
-                        <th>Tên vật tư, dụng cụ, sản phẩm</th> <!-- Cột này tự động giãn rộng -->
-                        <th style="width: 70px;">Số lượng<br>xuất</th>
-                        <th style="width: 90px;">Đơn giá</th>
-                        <th style="width: 100px;">Thành tiền</th>
-                        <th style="width: 70px;">Số lượng<br>nhận</th>
-                        <th style="width: 100px;">Ghi chú</th>
+                        <th style="width: 35px;">STT</th>
+                        <!-- Cột tên không set width để tự giãn -->
+                        <th>Tên vật tư, dụng cụ, sản phẩm</th> 
+                        <!-- Giảm width các cột số liệu -->
+                        <th style="width: 50px;">Số lượng<br>xuất</th>
+                        <th style="width: 70px;">Đơn giá</th>
+                        <th style="width: 80px;">Thành tiền</th>
+                        <th style="width: 50px;">Số lượng<br>nhận</th>
+                        <th style="width: 80px;">Ghi chú</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
@@ -216,7 +218,6 @@
     <script>
         const params = new URLSearchParams(window.location.search);
 
-        // Dữ liệu mẫu (Chỉ lấy thông tin Header)
         const dbData = {
             id_phieu: params.get('id') || "..........",
             ngay_lap: params.get('ngay') || new Date().toISOString().split('T')[0],
@@ -228,7 +229,6 @@
         };
 
         function renderApp() {
-            // Fill thông tin Header
             document.getElementById('so-phieu').textContent = dbData.id_phieu;
             document.getElementById('ten-studio').textContent = dbData.studio_ten;
             document.getElementById('dc-studio').textContent = dbData.studio_dc;
@@ -238,26 +238,23 @@
             document.getElementById('kho-nhap').textContent = dbData.studio_ten; 
             document.getElementById('dia-diem').textContent = dbData.studio_dc;
 
-            // Ngày tháng
             const d = new Date(dbData.ngay_lap);
             const dateStr = `Ngày ${d.getDate().toString().padStart(2,'0')} tháng ${(d.getMonth()+1).toString().padStart(2,'0')} năm ${d.getFullYear()}`;
             document.getElementById('ngay-thang').textContent = dateStr;
 
-            // Render Table (Trống hoàn toàn để tự ghi)
             const tbody = document.getElementById('table-body');
             let rowsHtml = '';
             
-            // Tạo 15 dòng trống
             for (let i = 0; i < 15; i++) {
                 rowsHtml += `
                     <tr>
                         <td class="center">${i+1}</td>
-                        <td></td> <!-- Tên vật tư -->
-                        <td></td> <!-- SL Xuất -->
-                        <td></td> <!-- Đơn giá -->
-                        <td></td> <!-- Thành tiền -->
-                        <td></td> <!-- SL Nhận -->
-                        <td></td> <!-- Ghi chú -->
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 `;
             }
