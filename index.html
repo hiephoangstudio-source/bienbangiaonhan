@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản Giao Nhận Vật Tư</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Times New Roman', serif; 
+            font-size: 10pt; 
+            line-height: 1.2; 
+            color: #000; 
+            background-color: #f0f2f5; 
+            margin: 0; padding: 0; 
+        }
+
+        @page { size: A4 portrait; margin: 0; }
+
+        .actions-container { 
+            position: sticky; top: 0; display: flex; justify-content: center; gap: 15px;
+            width: 100%; background-color: #343a40; padding: 10px; z-index: 2000; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .action-btn { background-color: #0d6efd; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+
+        .page-wrapper { display: flex; justify-content: center; padding: 20px; }
+
+        .a4-page {
+            width: 210mm;
+            min-height: 296mm; 
+            background: white;
+            padding: 10mm 15mm; 
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* HEADER */
+        .header-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .studio-name { font-weight: bold; font-size: 11pt; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .studio-info { display: block; font-size: 10pt; margin-bottom: 1px; }
+        .voucher-num-line { font-size: 10pt; margin-bottom: 2px; }
+
+        /* TITLE */
+        .title-section { text-align: center; margin-bottom: 15px; }
+        .main-title { font-size: 18pt; font-weight: bold; text-transform: uppercase; margin: 0; }
+        .date-sub { font-style: italic; font-size: 10pt; margin-top: 5px; }
+
+        /* INFO FORM */
+        .info-section { margin-bottom: 15px; }
+        .form-row { display: flex; align-items: baseline; margin-bottom: 5px; }
+        .label { white-space: nowrap; margin-right: 5px; font-size: 11pt; }
+        .value { flex: 1; border-bottom: 1px dotted #000; font-weight: bold; padding-left: 5px; font-size: 11pt; }
+
+        /* TABLE */
+        table.handover-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 15px; }
+        table.handover-table th { border: 1px solid #000; padding: 5px 2px; background: #fff; font-weight: bold; height: 40px; vertical-align: middle; text-align: center;}
+        table.handover-table td { border: 1px solid #000; padding: 4px; height: 25px; vertical-align: middle; }
+        
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .bold { font-weight: bold; }
+
+        /* SIGNATURE BLOCKS */
+        .signature-block-wrapper { margin-top: 10px; }
+        .sig-section { margin-bottom: 15px; }
+        .sig-header-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .sig-section-title { font-weight: bold; text-decoration: underline; font-size: 11pt;}
+        .sig-date-line { font-style: italic; font-size: 10pt; }
+
+        .sig-grid { display: flex; justify-content: space-between; text-align: center; }
+        .sig-col { width: 19%; } /* 5 cột chia đều */
+        .sig-role { font-weight: bold; font-size: 10pt; margin-bottom: 2px; }
+        .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 40px; } /* Khoảng ký */
+        
+        @media print {
+            body { background: none; }
+            .actions-container { display: none; }
+            .page-wrapper { padding: 0; }
+            .a4-page { width: 100%; height: 296mm; box-shadow: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="actions-container">
+        <button onclick="window.print()" class="action-btn">🖨️ In Phiếu</button>
+        <button onclick="downloadPDF()" class="action-btn" style="margin-left:10px">📄 Tải PDF</button>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="a4-page" id="print-area">
+            
+            <!-- HEADER -->
+            <div class="header-section">
+                <div class="header-left">
+                    <span class="studio-name" id="ten-studio">2H STUDIO</span>
+                    <span class="studio-info">ĐC: <span id="dc-studio"></span></span>
+                    <span class="studio-info">Hotline: <span id="hl-studio"></span></span>
+                </div>
+                <div class="header-right">
+                    <div class="voucher-num-line">Quyển số: ...........</div>
+                    <div class="voucher-num-line">Số: <span class="bold" id="so-phieu">..........</span></div>
+                </div>
+            </div>
+
+            <!-- TITLE -->
+            <div class="title-section">
+                <h1 class="main-title">BẢN GIAO NHẬN VẬT TƯ</h1>
+                <div class="date-sub" id="ngay-thang">Ngày ... tháng ... năm ...</div>
+            </div>
+
+            <!-- INFO -->
+            <div class="info-section">
+                <div class="form-row">
+                    <span class="label">Người giao hàng:</span>
+                    <span class="value" id="nguoi-giao"></span>
+                </div>
+                <div class="form-row">
+                    <span class="label">Địa chỉ/Bộ phận:</span>
+                    <span class="value" id="dia-chi-kh"></span>
+                </div>
+                <div class="form-row">
+                    <span class="label">Lý do giao nhận:</span>
+                    <span class="value" id="ly-do"></span>
+                </div>
+                <div class="form-row">
+                    <span class="label" style="width: 50%;">Nhập/Xuất tại kho: <span class="value" style="border:none; border-bottom:1px dotted #000" id="kho-nhap"></span></span>
+                    <span class="label" style="width: 50%;">Địa điểm: <span class="value" style="border:none; border-bottom:1px dotted #000" id="dia-diem"></span></span>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <table class="handover-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">STT</th>
+                        <th>Tên vật tư, dụng cụ,<br>sản phẩm</th>
+                        <th style="width: 60px;">Mã số</th>
+                        <th style="width: 50px;">ĐVT</th>
+                        <th style="width: 60px;">SL<br>Xuất</th>
+                        <th style="width: 70px;">Đơn giá</th>
+                        <th style="width: 80px;">Thành tiền</th>
+                        <th style="width: 60px;">SL<br>Nhận</th>
+                        <th style="width: 100px;">Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Rows generated by JS -->
+                </tbody>
+            </table>
+
+            <!-- SIGNATURES (3 SECTIONS) -->
+            <div class="signature-block-wrapper">
+                
+                <!-- 1. Xuất hàng -->
+                <div class="sig-section">
+                    <div class="sig-header-row">
+                        <span class="sig-section-title">1. Xuất hàng:</span>
+                        <span class="sig-date-line">Xuất ngày…… tháng …… năm …..</span>
+                    </div>
+                    <div class="sig-grid">
+                        <div class="sig-col"><div class="sig-role">Người lập phiếu</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                    </div>
+                </div>
+
+                <!-- 2. Nhập hàng -->
+                <div class="sig-section">
+                    <div class="sig-header-row">
+                        <span class="sig-section-title">2. Nhập hàng:</span>
+                        <span class="sig-date-line">Nhập ngày…… tháng …… năm …..</span>
+                    </div>
+                    <div class="sig-grid">
+                        <div class="sig-col"><div class="sig-role">Người lập phiếu</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                    </div>
+                </div>
+
+                <!-- 3. Hàng mất hỏng -->
+                <div class="sig-section">
+                    <div class="sig-header-row">
+                        <span class="sig-section-title">3. Hàng mất hỏng:</span>
+                        <span class="sig-date-line">Ký nhận ngày…… tháng …… năm …..</span>
+                    </div>
+                    <div class="sig-grid">
+                        <div class="sig-col"><div class="sig-role">Người lập phiếu</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
+                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        function getItemsFromUrl() {
+            try {
+                const itemsStr = params.get('items');
+                return itemsStr ? JSON.parse(itemsStr) : [];
+            } catch (e) { return []; }
+        }
+
+        // Dữ liệu mẫu (Nhận từ URL)
+        const dbData = {
+            id_phieu: params.get('id') || "..........",
+            ngay_lap: params.get('ngay') || new Date().toISOString().split('T')[0],
+            nguoi_tao: params.get('nguoi_tao') || "",
+            
+            studio_ten: params.get('ten_studio') || "2H STUDIO",
+            studio_dc: params.get('dia_chi_studio') || "",
+            studio_hl: params.get('hotline_studio') || "",
+
+            khach_ten: params.get('khach') || "",
+            khach_dc: params.get('diachi') || "",
+            ly_do: params.get('ly_do') || "",
+
+            items: getItemsFromUrl()
+        };
+
+        function renderApp() {
+            // Fill thông tin
+            document.getElementById('so-phieu').textContent = dbData.id_phieu;
+            document.getElementById('ten-studio').textContent = dbData.studio_ten;
+            document.getElementById('dc-studio').textContent = dbData.studio_dc;
+            document.getElementById('hl-studio').textContent = dbData.studio_hl;
+            document.getElementById('kho-nhap').textContent = dbData.studio_ten; // Mặc định kho là studio
+            document.getElementById('dia-diem').textContent = dbData.studio_dc;
+
+            document.getElementById('nguoi-giao').textContent = dbData.khach_ten;
+            document.getElementById('dia-chi-kh').textContent = dbData.khach_dc;
+            document.getElementById('ly-do').textContent = dbData.ly_do;
+
+            // Ngày tháng
+            const d = new Date(dbData.ngay_lap);
+            const dateStr = `Ngày ${d.getDate().toString().padStart(2,'0')} tháng ${(d.getMonth()+1).toString().padStart(2,'0')} năm ${d.getFullYear()}`;
+            document.getElementById('ngay-thang').textContent = dateStr;
+
+            // Render Table
+            const tbody = document.getElementById('table-body');
+            let rowsHtml = '';
+            
+            // Render 15 dòng trống (hoặc có dữ liệu nếu URL truyền vào) để NV tự điền
+            for (let i = 0; i < 15; i++) {
+                const item = dbData.items[i];
+                if (item) {
+                    // Nếu có dữ liệu từ AppSheet (tên vật tư, sl xuất) thì điền vào
+                    // Cột SL Nhận và Ghi chú để trống
+                    rowsHtml += `
+                        <tr>
+                            <td class="center">${i+1}</td>
+                            <td>${item.sanpham || item.ten || ''}</td>
+                            <td class="center">${item.ma || ''}</td>
+                            <td class="center">${item.dvt || 'Cái'}</td>
+                            <td class="center">${item.soluong || item.sl || ''}</td>
+                            <td class="right">${(Number(item.don_gia)||0).toLocaleString('vi-VN')}</td>
+                            <td class="right">${(Number(item.thanhtien)||0).toLocaleString('vi-VN')}</td>
+                            <td></td> <!-- SL Nhận để trống -->
+                            <td></td> <!-- Ghi chú để trống -->
+                        </tr>
+                    `;
+                } else {
+                    // Dòng trống hoàn toàn để viết tay
+                    rowsHtml += `
+                        <tr>
+                            <td class="center">${i+1}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    `;
+                }
+            }
+            tbody.innerHTML = rowsHtml;
+            document.title = "GIAO_NHAN_" + dbData.id_phieu;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+        });
+
+        function downloadPDF() {
+            const element = document.getElementById('print-area');
+            const opt = { margin: 0, filename: document.title + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().from(element).set(opt).save();
+        }
+    </script>
+</body>
+</html>
