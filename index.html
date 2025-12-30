@@ -15,7 +15,7 @@
         body { 
             font-family: 'Times New Roman', serif; 
             font-size: 10pt; 
-            line-height: 1.2; 
+            line-height: 1.25; 
             color: #000; 
             background-color: #f0f2f5; 
             margin: 0; padding: 0; 
@@ -45,8 +45,11 @@
 
         /* HEADER */
         .header-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .header-left { flex: 1; }
         .studio-name { font-weight: bold; font-size: 11pt; text-transform: uppercase; display: block; margin-bottom: 2px; }
         .studio-info { display: block; font-size: 10pt; margin-bottom: 1px; }
+        
+        .header-right { text-align: left; min-width: 140px; }
         .voucher-num-line { font-size: 10pt; margin-bottom: 2px; }
 
         /* TITLE */
@@ -56,14 +59,14 @@
 
         /* INFO FORM */
         .info-section { margin-bottom: 15px; }
-        .form-row { display: flex; align-items: baseline; margin-bottom: 5px; }
+        .form-row { display: flex; align-items: baseline; margin-bottom: 8px; } /* Tăng khoảng cách dòng viết tay */
         .label { white-space: nowrap; margin-right: 5px; font-size: 11pt; }
-        .value { flex: 1; border-bottom: 1px dotted #000; font-weight: bold; padding-left: 5px; font-size: 11pt; }
+        .value { flex: 1; border-bottom: 1px dotted #000; font-weight: bold; padding-left: 5px; font-size: 11pt; min-height: 18px; }
 
         /* TABLE */
         table.handover-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 15px; }
         table.handover-table th { border: 1px solid #000; padding: 5px 2px; background: #fff; font-weight: bold; height: 40px; vertical-align: middle; text-align: center;}
-        table.handover-table td { border: 1px solid #000; padding: 4px; height: 25px; vertical-align: middle; }
+        table.handover-table td { border: 1px solid #000; padding: 4px; height: 28px; vertical-align: middle; } /* Tăng chiều cao dòng để viết */
         
         .center { text-align: center; }
         .right { text-align: right; }
@@ -71,15 +74,15 @@
 
         /* SIGNATURE BLOCKS */
         .signature-block-wrapper { margin-top: 10px; }
-        .sig-section { margin-bottom: 15px; }
+        .sig-section { margin-bottom: 20px; }
         .sig-header-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .sig-section-title { font-weight: bold; text-decoration: underline; font-size: 11pt;}
         .sig-date-line { font-style: italic; font-size: 10pt; }
 
         .sig-grid { display: flex; justify-content: space-between; text-align: center; }
-        .sig-col { width: 19%; } /* 5 cột chia đều */
+        .sig-col { width: 19%; } 
         .sig-role { font-weight: bold; font-size: 10pt; margin-bottom: 2px; }
-        .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 40px; } /* Khoảng ký */
+        .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 45px; } 
         
         @media print {
             body { background: none; }
@@ -104,6 +107,7 @@
                 <div class="header-left">
                     <span class="studio-name" id="ten-studio">2H STUDIO</span>
                     <span class="studio-info">ĐC: <span id="dc-studio"></span></span>
+                    <span class="studio-info">Email: <span id="email-studio"></span></span> <!-- Thêm Email -->
                     <span class="studio-info">Hotline: <span id="hl-studio"></span></span>
                 </div>
                 <div class="header-right">
@@ -118,38 +122,36 @@
                 <div class="date-sub" id="ngay-thang">Ngày ... tháng ... năm ...</div>
             </div>
 
-            <!-- INFO -->
+            <!-- INFO (ĐỂ TRỐNG TỰ GHI) -->
             <div class="info-section">
                 <div class="form-row">
-                    <span class="label">Người giao hàng:</span>
-                    <span class="value" id="nguoi-giao"></span>
+                    <span class="label">Họ và tên người nhận hàng:</span>
+                    <span class="value"></span> <!-- Trống -->
                 </div>
                 <div class="form-row">
-                    <span class="label">Địa chỉ/Bộ phận:</span>
-                    <span class="value" id="dia-chi-kh"></span>
+                    <span class="label">Địa chỉ (Bộ phận):</span>
+                    <span class="value"></span> <!-- Trống -->
                 </div>
                 <div class="form-row">
-                    <span class="label">Lý do giao nhận:</span>
-                    <span class="value" id="ly-do"></span>
+                    <span class="label">Lý do xuất hàng:</span>
+                    <span class="value"></span> <!-- Trống -->
                 </div>
                 <div class="form-row">
-                    <span class="label" style="width: 50%;">Nhập/Xuất tại kho: <span class="value" style="border:none; border-bottom:1px dotted #000" id="kho-nhap"></span></span>
+                    <span class="label" style="width: 50%;">Xuất tại kho: <span class="value" style="border:none; border-bottom:1px dotted #000" id="kho-nhap"></span></span>
                     <span class="label" style="width: 50%;">Địa điểm: <span class="value" style="border:none; border-bottom:1px dotted #000" id="dia-diem"></span></span>
                 </div>
             </div>
 
-            <!-- TABLE -->
+            <!-- TABLE (BỎ CỘT MÃ, ĐVT - ĐỂ TRỐNG) -->
             <table class="handover-table">
                 <thead>
                     <tr>
                         <th style="width: 40px;">STT</th>
-                        <th>Tên vật tư, dụng cụ,<br>sản phẩm</th>
-                        <th style="width: 60px;">Mã số</th>
-                        <th style="width: 50px;">ĐVT</th>
-                        <th style="width: 60px;">SL<br>Xuất</th>
-                        <th style="width: 70px;">Đơn giá</th>
-                        <th style="width: 80px;">Thành tiền</th>
-                        <th style="width: 60px;">SL<br>Nhận</th>
+                        <th>Tên vật tư, dụng cụ, sản phẩm</th> <!-- Cột này tự động giãn rộng -->
+                        <th style="width: 70px;">Số lượng<br>xuất</th>
+                        <th style="width: 90px;">Đơn giá</th>
+                        <th style="width: 100px;">Thành tiền</th>
+                        <th style="width: 70px;">Số lượng<br>nhận</th>
                         <th style="width: 100px;">Ghi chú</th>
                     </tr>
                 </thead>
@@ -214,87 +216,50 @@
     <script>
         const params = new URLSearchParams(window.location.search);
 
-        function getItemsFromUrl() {
-            try {
-                const itemsStr = params.get('items');
-                return itemsStr ? JSON.parse(itemsStr) : [];
-            } catch (e) { return []; }
-        }
-
-        // Dữ liệu mẫu (Nhận từ URL)
+        // Dữ liệu mẫu (Chỉ lấy thông tin Header)
         const dbData = {
             id_phieu: params.get('id') || "..........",
             ngay_lap: params.get('ngay') || new Date().toISOString().split('T')[0],
-            nguoi_tao: params.get('nguoi_tao') || "",
             
             studio_ten: params.get('ten_studio') || "2H STUDIO",
             studio_dc: params.get('dia_chi_studio') || "",
+            studio_email: params.get('email_studio') || "",
             studio_hl: params.get('hotline_studio') || "",
-
-            khach_ten: params.get('khach') || "",
-            khach_dc: params.get('diachi') || "",
-            ly_do: params.get('ly_do') || "",
-
-            items: getItemsFromUrl()
         };
 
         function renderApp() {
-            // Fill thông tin
+            // Fill thông tin Header
             document.getElementById('so-phieu').textContent = dbData.id_phieu;
             document.getElementById('ten-studio').textContent = dbData.studio_ten;
             document.getElementById('dc-studio').textContent = dbData.studio_dc;
+            document.getElementById('email-studio').textContent = dbData.studio_email;
             document.getElementById('hl-studio').textContent = dbData.studio_hl;
-            document.getElementById('kho-nhap').textContent = dbData.studio_ten; // Mặc định kho là studio
+            
+            document.getElementById('kho-nhap').textContent = dbData.studio_ten; 
             document.getElementById('dia-diem').textContent = dbData.studio_dc;
-
-            document.getElementById('nguoi-giao').textContent = dbData.khach_ten;
-            document.getElementById('dia-chi-kh').textContent = dbData.khach_dc;
-            document.getElementById('ly-do').textContent = dbData.ly_do;
 
             // Ngày tháng
             const d = new Date(dbData.ngay_lap);
             const dateStr = `Ngày ${d.getDate().toString().padStart(2,'0')} tháng ${(d.getMonth()+1).toString().padStart(2,'0')} năm ${d.getFullYear()}`;
             document.getElementById('ngay-thang').textContent = dateStr;
 
-            // Render Table
+            // Render Table (Trống hoàn toàn để tự ghi)
             const tbody = document.getElementById('table-body');
             let rowsHtml = '';
             
-            // Render 15 dòng trống (hoặc có dữ liệu nếu URL truyền vào) để NV tự điền
+            // Tạo 15 dòng trống
             for (let i = 0; i < 15; i++) {
-                const item = dbData.items[i];
-                if (item) {
-                    // Nếu có dữ liệu từ AppSheet (tên vật tư, sl xuất) thì điền vào
-                    // Cột SL Nhận và Ghi chú để trống
-                    rowsHtml += `
-                        <tr>
-                            <td class="center">${i+1}</td>
-                            <td>${item.sanpham || item.ten || ''}</td>
-                            <td class="center">${item.ma || ''}</td>
-                            <td class="center">${item.dvt || 'Cái'}</td>
-                            <td class="center">${item.soluong || item.sl || ''}</td>
-                            <td class="right">${(Number(item.don_gia)||0).toLocaleString('vi-VN')}</td>
-                            <td class="right">${(Number(item.thanhtien)||0).toLocaleString('vi-VN')}</td>
-                            <td></td> <!-- SL Nhận để trống -->
-                            <td></td> <!-- Ghi chú để trống -->
-                        </tr>
-                    `;
-                } else {
-                    // Dòng trống hoàn toàn để viết tay
-                    rowsHtml += `
-                        <tr>
-                            <td class="center">${i+1}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    `;
-                }
+                rowsHtml += `
+                    <tr>
+                        <td class="center">${i+1}</td>
+                        <td></td> <!-- Tên vật tư -->
+                        <td></td> <!-- SL Xuất -->
+                        <td></td> <!-- Đơn giá -->
+                        <td></td> <!-- Thành tiền -->
+                        <td></td> <!-- SL Nhận -->
+                        <td></td> <!-- Ghi chú -->
+                    </tr>
+                `;
             }
             tbody.innerHTML = rowsHtml;
             document.title = "GIAO_NHAN_" + dbData.id_phieu;
