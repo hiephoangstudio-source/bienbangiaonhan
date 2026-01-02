@@ -21,6 +21,7 @@
             margin: 0; padding: 0; 
         }
 
+        /* Thiết lập khổ giấy chuẩn */
         @page { size: A4 portrait; margin: 0; }
 
         .actions-container { 
@@ -30,17 +31,19 @@
         }
         .action-btn { background-color: #0d6efd; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
 
-        .page-wrapper { display: flex; justify-content: center; padding: 20px; }
+        /* Wrapper hiển thị trên màn hình */
+        .page-wrapper { display: flex; justify-content: center; padding: 20px; background: #525659; min-height: 100vh;}
 
         .a4-page {
             width: 210mm;
-            min-height: 296mm; 
+            height: 296mm; /* Đổi từ min-height sang height để cố định khung */
             background: white;
             padding: 10mm 15mm; 
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
             position: relative;
+            margin: auto;
         }
 
         /* HEADER */
@@ -64,31 +67,58 @@
         .value { flex: 1; border-bottom: 1px dotted #000; font-weight: bold; padding-left: 5px; font-size: 11pt; min-height: 18px; }
 
         /* TABLE */
-        table.handover-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 15px; }
-        table.handover-table th { border: 1px solid #000; padding: 5px 2px; background: #fff; font-weight: bold; height: 40px; vertical-align: middle; text-align: center;}
-        table.handover-table td { border: 1px solid #000; padding: 4px; height: 28px; vertical-align: middle; }
+        table.handover-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 10px; }
+        table.handover-table th { border: 1px solid #000; padding: 5px 2px; background: #fff; font-weight: bold; height: 35px; vertical-align: middle; text-align: center;}
+        table.handover-table td { border: 1px solid #000; padding: 4px; height: 25px; vertical-align: middle; }
         
         .center { text-align: center; }
         .right { text-align: right; }
         .bold { font-weight: bold; }
 
         /* SIGNATURE BLOCKS */
-        .signature-block-wrapper { margin-top: 10px; }
-        .sig-section { margin-bottom: 20px; }
-        .sig-header-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .signature-block-wrapper { margin-top: 5px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .sig-section { margin-bottom: 10px; }
+        .sig-header-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
         .sig-section-title { font-weight: bold; text-decoration: underline; font-size: 11pt;}
         .sig-date-line { font-style: italic; font-size: 10pt; }
 
         .sig-grid { display: flex; justify-content: space-between; text-align: center; }
         .sig-col { width: 19%; } 
         .sig-role { font-weight: bold; font-size: 10pt; margin-bottom: 2px; }
-        .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 45px; } 
+        /* Giảm margin bottom một chút để tiết kiệm diện tích */
+        .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 35px; } 
         
+        /* --- PHẦN QUAN TRỌNG: FIX LỖI TRÀN TRANG KHI IN --- */
         @media print {
-            body { background: none; }
+            body, html { 
+                margin: 0; 
+                padding: 0; 
+                height: 100%; 
+                background: #fff; 
+            }
             .actions-container { display: none; }
-            .page-wrapper { padding: 0; }
-            .a4-page { width: 100%; height: 296mm; box-shadow: none; } 
+            .page-wrapper { 
+                padding: 0; 
+                margin: 0; 
+                height: 100vh; 
+                display: block; 
+                background: #fff;
+            }
+            .a4-page { 
+                width: 100%; 
+                height: auto; /* Để nội dung tự co giãn */
+                margin: 0; 
+                border: none; 
+                box-shadow: none; 
+                
+                /* Kỹ thuật Zoom: Thu nhỏ toàn bộ trang xuống 95% 
+                   để bù vào phần lề máy in tự thêm vào */
+                zoom: 0.95; 
+                
+                overflow: hidden; /* Cắt bỏ phần thừa nếu có */
+                page-break-after: avoid; 
+                page-break-inside: avoid;
+            } 
         }
     </style>
 </head>
@@ -147,9 +177,7 @@
                 <thead>
                     <tr>
                         <th style="width: 35px;">STT</th>
-                        <!-- Cột tên không set width để tự giãn -->
                         <th>Tên vật tư, dụng cụ, sản phẩm</th> 
-                        <!-- Giảm width các cột số liệu -->
                         <th style="width: 50px;">Số lượng<br>xuất</th>
                         <th style="width: 70px;">Đơn giá</th>
                         <th style="width: 80px;">Thành tiền</th>
@@ -268,7 +296,14 @@
 
         function downloadPDF() {
             const element = document.getElementById('print-area');
-            const opt = { margin: 0, filename: document.title + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            const opt = { 
+                margin: 0, 
+                filename: document.title + '.pdf', 
+                image: { type: 'jpeg', quality: 0.98 }, 
+                // Thêm scrollY: 0 để tránh lỗi lệch trắng đầu trang
+                html2canvas: { scale: 2, scrollY: 0 }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+            };
             html2pdf().from(element).set(opt).save();
         }
     </script>
