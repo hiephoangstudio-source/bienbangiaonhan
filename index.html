@@ -36,7 +36,7 @@
 
         .a4-page {
             width: 210mm;
-            height: 296mm; /* Đổi từ min-height sang height để cố định khung */
+            height: 296mm; 
             background: white;
             padding: 10mm 15mm; 
             display: flex;
@@ -85,10 +85,10 @@
         .sig-grid { display: flex; justify-content: space-between; text-align: center; }
         .sig-col { width: 19%; } 
         .sig-role { font-weight: bold; font-size: 10pt; margin-bottom: 2px; }
-        /* Giảm margin bottom một chút để tiết kiệm diện tích */
+        
         .sig-note { font-style: italic; font-size: 9pt; margin-bottom: 35px; } 
         
-        /* --- PHẦN QUAN TRỌNG: FIX LỖI TRÀN TRANG KHI IN --- */
+        /* FIX LỖI TRÀN TRANG KHI IN */
         @media print {
             body, html { 
                 margin: 0; 
@@ -106,16 +106,12 @@
             }
             .a4-page { 
                 width: 100%; 
-                height: auto; /* Để nội dung tự co giãn */
+                height: auto; 
                 margin: 0; 
                 border: none; 
                 box-shadow: none; 
-                
-                /* Kỹ thuật Zoom: Thu nhỏ toàn bộ trang xuống 95% 
-                   để bù vào phần lề máy in tự thêm vào */
                 zoom: 0.95; 
-                
-                overflow: hidden; /* Cắt bỏ phần thừa nếu có */
+                overflow: hidden; 
                 page-break-after: avoid; 
                 page-break-inside: avoid;
             } 
@@ -146,9 +142,9 @@
                 </div>
             </div>
 
-            <!-- TITLE -->
+            <!-- TITLE (ĐÃ SỬA) -->
             <div class="title-section">
-                <h1 class="main-title">BẢN GIAO NHẬN VẬT TƯ</h1>
+                <h1 class="main-title">BẢN GIAO NHẬN VẬT TƯ, TRANG PHỤC</h1>
                 <div class="date-sub" id="ngay-thang">Ngày ... tháng ... năm ...</div>
             </div>
 
@@ -190,7 +186,7 @@
                 </tbody>
             </table>
 
-            <!-- SIGNATURES (3 SECTIONS) -->
+            <!-- SIGNATURES (ĐÃ SỬA: Đại diện Studio) -->
             <div class="signature-block-wrapper">
                 
                 <!-- 1. Xuất hàng -->
@@ -204,7 +200,7 @@
                         <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
-                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                        <div class="sig-col"><div class="sig-role">Đại diện Studio</div><div class="sig-note">(Ký, đóng dấu)</div></div>
                     </div>
                 </div>
 
@@ -219,7 +215,7 @@
                         <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
-                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                        <div class="sig-col"><div class="sig-role">Đại diện Studio</div><div class="sig-note">(Ký, đóng dấu)</div></div>
                     </div>
                 </div>
 
@@ -234,7 +230,7 @@
                         <div class="sig-col"><div class="sig-role">Người giao hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Người nhận hàng</div><div class="sig-note">(Ký, họ tên)</div></div>
                         <div class="sig-col"><div class="sig-role">Kế toán trưởng</div><div class="sig-note">(Ký, họ tên)</div></div>
-                        <div class="sig-col"><div class="sig-role">Thủ trưởng đơn vị</div><div class="sig-note">(Ký, đóng dấu)</div></div>
+                        <div class="sig-col"><div class="sig-role">Đại diện Studio</div><div class="sig-note">(Ký, đóng dấu)</div></div>
                     </div>
                 </div>
 
@@ -300,7 +296,6 @@
                 margin: 0, 
                 filename: document.title + '.pdf', 
                 image: { type: 'jpeg', quality: 0.98 }, 
-                // Thêm scrollY: 0 để tránh lỗi lệch trắng đầu trang
                 html2canvas: { scale: 2, scrollY: 0 }, 
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
             };
