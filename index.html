@@ -246,7 +246,6 @@
             bo_phan: params.get('bo_phan') || "",
             ly_do: params.get('ly_do') || "",
             
-            ma_trang_phuc: params.get('ma_trang_phuc') || "",
             dich_vu: params.get('dich_vu') || ""
         };
 
@@ -265,30 +264,25 @@
             document.getElementById('dia-diem').textContent = dbData.studio_dc;
 
             const d = new Date(dbData.ngay_lap);
-            // Xử lý cẩn thận nếu ngày null hoặc không đúng định dạng
             if (!isNaN(d.getTime())) {
                 const dateStr = `Ngày ${d.getDate().toString().padStart(2,'0')} tháng ${(d.getMonth()+1).toString().padStart(2,'0')} năm ${d.getFullYear()}`;
                 document.getElementById('ngay-thang').textContent = dateStr;
             }
 
-            // Xử lý Normalize danh sách trang phục: cắt chuỗi và loại bỏ khoảng trắng thừa
+            // Chỉ tách mảng tên dịch vụ
             const tenDichVuArr = dbData.dich_vu.split(',').map(item => item.trim()).filter(i => i);
-            const maTrangPhucArr = dbData.ma_trang_phuc.split(',').map(item => item.trim()).filter(i => i);
 
             const tbody = document.getElementById('table-body');
             let rowsHtml = '';
             
-            // Render 15 dòng cố định cho bảng
             for (let i = 0; i < 15; i++) {
                 let tenSp = "";
                 let sl = "";
                 
-                // Nếu có data thì đổ vào, không thì để trống
-                if (i < tenDichVuArr.length || i < maTrangPhucArr.length) {
-                    let ma = maTrangPhucArr[i] ? `[${maTrangPhucArr[i]}] ` : "";
-                    let ten = tenDichVuArr[i] ? tenDichVuArr[i] : "";
-                    tenSp = ma + ten;
-                    sl = "1"; // Mặc định mỗi mã ID tương ứng với số lượng 1
+                // Chỉ gán tên dịch vụ vào cột
+                if (i < tenDichVuArr.length) {
+                    tenSp = tenDichVuArr[i];
+                    sl = "1"; 
                 }
 
                 rowsHtml += `
