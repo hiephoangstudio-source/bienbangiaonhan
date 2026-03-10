@@ -174,11 +174,11 @@
                         <th style="width: 70px;">Đơn giá</th>
                         <th style="width: 80px;">Thành tiền</th>
                         <th style="width: 50px;">Số lượng<br>nhận</th>
-                        <th style="width: 80px;">Ghi chú</th>
+                        <th style="width: 120px;">Ghi chú</th>
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    </tbody>
+                </tbody>
             </table>
 
             <div class="signature-block-wrapper">
@@ -246,7 +246,10 @@
             bo_phan: params.get('bo_phan') || "",
             ly_do: params.get('ly_do') || "",
             
-            dich_vu: params.get('dich_vu') || ""
+            dich_vu: params.get('dich_vu') || "",
+            
+            // Nhận tham số ghi chú từ URL
+            ghi_chu: params.get('ghi_chu') || "" 
         };
 
         function renderApp() {
@@ -269,17 +272,17 @@
                 document.getElementById('ngay-thang').textContent = dateStr;
             }
 
-            // Chỉ tách mảng tên dịch vụ
             const tenDichVuArr = dbData.dich_vu.split(',').map(item => item.trim()).filter(i => i);
 
             const tbody = document.getElementById('table-body');
             let rowsHtml = '';
             
-            for (let i = 0; i < 15; i++) {
+            const totalRows = 15; // Cố định số dòng bảng
+            
+            for (let i = 0; i < totalRows; i++) {
                 let tenSp = "";
                 let sl = "";
                 
-                // Chỉ gán tên dịch vụ vào cột
                 if (i < tenDichVuArr.length) {
                     tenSp = tenDichVuArr[i];
                     sl = "1"; 
@@ -292,10 +295,14 @@
                         <td class="center">${sl}</td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                `;
+                        <td></td>`;
+                
+                // Cột Ghi chú: Sử dụng rowspan để gộp cột từ dòng đầu tiên kéo dài xuống hết các dòng
+                if (i === 0) {
+                    rowsHtml += `<td rowspan="${totalRows}" style="vertical-align: top; text-align: left; padding: 6px; white-space: pre-wrap;">${dbData.ghi_chu}</td>`;
+                }
+
+                rowsHtml += `</tr>`;
             }
             tbody.innerHTML = rowsHtml;
             document.title = "GIAO_NHAN_" + dbData.id_phieu;
